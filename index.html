@@ -140,6 +140,67 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Redis的LRU和LFU" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis的LRU和LFU"><a href="#Redis的LRU和LFU" class="headerlink" title="Redis的LRU和LFU"></a>Redis的LRU和LFU</h1><h2 id="LRU"><a href="#LRU" class="headerlink" title="LRU"></a>LRU</h2><p>最久未使用</p>
+<p>传统的LRU是通过链表+hash表的形式，每次访问都需要将该节点移动到链表头部。如果某一个时刻，访问了大量的数据，那么这些数据都需要移动到链表头部，就会造成大量的时间消耗。</p>
+<p>所以redis没有使用传统的LRU算法，redis为每个数据对象加入了一个24bit 的lru关键字，用来记录当前被访问的时间戳。</p>
+<p>使用LRU算法进行淘汰的过程是，首先随机选取一定量的数据，根据lru字段淘汰最久没有使用的那个数据。</p>
+<p>坏处：仅仅访问时间或访问顺序进行数据淘汰是不够的，有可能有些数据只访问一次就不会再访问了。</p>
+<h2 id="LFU"><a href="#LFU" class="headerlink" title="LFU"></a>LFU</h2><p>根据访问的频率来淘汰数据</p>
+<p>使用LFU算法时，lru字段前16位记录的是时间，后8位记录的是访问频率。</p>
+<p>访问的频率并非每次访问简单的加1。</p>
+<p>当被数据被访问了，先会根据当前时间和lru记录的上一次时间进行一个衰减，然后按照一定概率进行增加。</p>
+<p>redis.conf 提供了两个配置项，用于调整 LFU 算法从而控制 logc 的增长和衰减：</p>
+<ul>
+<li><code>lfu-decay-time</code> 用于调整衰减的速度，它是一个以分钟为单位的数值，默认值为1，lfu-decay-time 值越大，衰减越慢；</li>
+<li><code>lfu-log-factor</code> 用于调整增长的速度，lfu-log-factor 值越大， 增长越慢</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/01/09/Redis%E7%9A%84LRU%E5%92%8CLFU/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -225,7 +286,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2023 John Doe
+    		&copy; 2024 John Doe
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
